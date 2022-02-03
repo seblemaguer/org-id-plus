@@ -34,7 +34,6 @@
 (defvar org-id+-set '())
 
 (defun org-id+-new  (&optional pom)
-  (interactive)
   (org-with-point-at pom
     (let* ((cleaned-title (downcase (replace-regexp-in-string "[^[:alnum:] ]" "" (org-entry-get nil "ITEM"))))
            (elts (split-string cleaned-title))
@@ -55,7 +54,6 @@
    property ID-PROPERTY if none is present already. PREFIX will
    be passed through to `org-id-new'. In any case, the value of
    the ID-PROPERTY of the entry is returned."
-  (interactive)
   (org-with-point-at pom
     (let ((id (org-entry-get nil id-property)))
       (cond
