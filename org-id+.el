@@ -47,30 +47,47 @@
       (add-to-list 'org-id+-set id)
       id)))
 
-(defun org-id+-get-custom-id (&optional pom create prefix)
-  "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+(defun org-id+-get-id (id-property &optional pom create prefix)
+  "Get the ID property identified by ID-PROPERTY of the entry at point-or-marker POM.
    If POM is nil, refer to the entry at point. If the entry does
-   not have an CUSTOM_ID, the function returns nil. However, when
-   CREATE is non nil, create a CUSTOM_ID if none is present
-   already. PREFIX will be passed through to `org-id-new'. In any
-   case, the CUSTOM_ID of the entry is returned."
+   not have an ID as identified by ID-PROPERTY, the function
+   returns nil. However, when CREATE is non nil, create a a
+   property ID-PROPERTY if none is present already. PREFIX will
+   be passed through to `org-id-new'. In any case, the value of
+   the ID-PROPERTY of the entry is returned."
   (interactive)
   (org-with-point-at pom
-    (let ((id (org-entry-get nil "CUSTOM_ID")))
+    (let ((id (org-entry-get nil id-property)))
       (cond
        ((and id (stringp id) (string-match "\\S-" id))
         id)
        (create
         (setq id (concat "sec:" (org-id+-new pom)))
-        (org-entry-put pom "CUSTOM_ID" id)
+        (org-entry-put pom id-property id)
         (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
         id)))))
 
+(defun org-id+-add-id-to-current-headline ()
+  "Generate and add an ID for the headline at the current point."
+  (interactive)
+  (org-id+-get-custom-id "ID" (point) 'create))
+
+(defun org-id+-add-custom-id-to-current-headline ()
+  "Generate and add a CUSTOM_ID for the headline at the current point."
+  (interactive)
+  (org-id+-get-custom-id "CUSTOM_ID" (point) 'create))
+
 (defun org-id+-add-ids-to-headlines-in-file ()
+  "Add ID properties to all headlines in the current file which do
+   not already have one."
+  (interactive)
+  (org-map-entries (lambda () (org-id+-add-id-to-current-headline))))
+
+(defun org-id+-add-custom-ids-to-headlines-in-file ()
   "Add CUSTOM_ID properties to all headlines in the
    current file which do not already have one."
   (interactive)
-  (org-map-entries (lambda () (org-id+-get-custom-id (point) 'create))))
+  (org-map-entries (lambda () (org-id+-add-custom-id-to-current-headline))))
 
 (provide 'org-id+)
 
