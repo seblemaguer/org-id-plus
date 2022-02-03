@@ -68,12 +68,12 @@
 (defun org-id+-add-id-to-current-headline ()
   "Generate and add an ID for the headline at the current point."
   (interactive)
-  (org-id+-get-custom-id "ID" (point) 'create))
+  (org-id+-get-id "ID" (point) 'create))
 
 (defun org-id+-add-custom-id-to-current-headline ()
   "Generate and add a CUSTOM_ID for the headline at the current point."
   (interactive)
-  (org-id+-get-custom-id "CUSTOM_ID" (point) 'create))
+  (org-id+-get-id "CUSTOM_ID" (point) 'create))
 
 (defun org-id+-add-ids-to-headlines-in-file ()
   "Add ID properties to all headlines in the current file which do
